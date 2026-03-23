@@ -1,0 +1,23 @@
+:root {
+  --color-primary: #0a5c5c;
+  --color-primary-strong: #063e3e;
+  --color-accent: #d97706;
+  --color-accent-soft: #f0d8b5;
+  --color-bg: #f7f3ea;
+  --color-surface: #fffcf6;
+  --color-surface-muted: #f1ece2;
+  --color-text: #172121;
+  --color-text-muted: #4b5b5b;
+  --color-border: #c9d2cd;
+  --color-divider: #d9e1dc;
+  --color-success: #2e6b57;
+  --color-danger: #a84b2f;
+  --color-highlight: #f3e2b8;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --page-max-width: 1440px;
+  --shadow-none: none;
+  --font-sans: "IBM Plex Sans", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --font-serif: "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
+  --font-mono: "IBM Plex Mono", "JetBrains Mono", "SFMono-Regular", monospace;
+}
