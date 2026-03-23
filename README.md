@@ -1,40 +1,91 @@
-# BOID-RAP
+# Business Object Intelligent Deep Research Analysis Platform (BOID-RAP)
+
+<p align="left">
+  <a href="#"><img alt="Python" src="https://img.shields.io/badge/Python-3.x-0A5C5C?style=flat-square"></a>
+  <a href="#"><img alt="React" src="https://img.shields.io/badge/Frontend-React%20%2B%20TypeScript-D97706?style=flat-square"></a>
+  <a href="#"><img alt="SQLite" src="https://img.shields.io/badge/Database-SQLite-0A5C5C?style=flat-square"></a>
+  <a href="#"><img alt="Status" src="https://img.shields.io/badge/Status-Working%20Prototype-D97706?style=flat-square"></a>
+  <a href="#"><img alt="Focus" src="https://img.shields.io/badge/Focus-Research%20Workspace-0A5C5C?style=flat-square"></a>
+</p>
+
+**中文简介**
+
+BOID-RAP 是一个面向 **公司 / 股票 / 商品** 的智能研究工作台。  
+它不是把“大模型回答”简单包成聊天框，而是把 **检索、研究会话、异步任务、结构化报告、证据引用、追问交互、管理后台** 串成一条可持续演进的研究链路。
+
+这个项目适合：
+
+- 想做金融研究 / 行业研究 AI 产品的人
+- 想把“搜索 + LLM”做成可落地工作流的人
+- 需要一个可以直接改造的研究终端原型的人
+- 希望搭建带任务流、历史记录、引用回链、管理端的 AI 应用的人
+
+**English**
 
 BOID-RAP is an open-source research workspace for **companies, stocks, and commodities**.
 
-It combines:
+It is designed for builders who want more than a chat wrapper:
 
-- retrieval from external information sources
-- structured research sessions
-- asynchronous research jobs
-- citation-aware report generation
-- follow-up Q&A on top of generated reports
-- a frontend workspace with a restrained, finance-oriented visual style
+- retrieval-aware research sessions
+- async research jobs
+- structured reports with citations
+- follow-up Q&A on top of reports
+- admin and audit surfaces
+- a finance-oriented frontend workspace
 
-The goal is simple:
+In short:
 
-> turn messy research inputs into a repeatable workflow that feels closer to a professional research terminal than a generic AI chat page.
-
----
-
-## Why This Project Exists
-
-Most AI research demos stop at “ask a question, get an answer”.
-
-BOID-RAP is trying to push further:
-
-- **session-based research**, not one-off prompts
-- **retrieval + reasoning + structured output**, not pure text generation
-- **object-aware workflows** for company / stock / commodity research
-- **reports with citations and evidence alignment**
-- **job status, history, and auditability**
-- **an actual workspace UI**, not just an API endpoint
-
-If you care about building AI products for investment research, industry analysis, due diligence, or decision support systems, this repo is designed to be a practical starting point.
+> BOID-RAP helps turn messy research inputs into a repeatable, inspectable, product-ready workflow.
 
 ---
 
-## What You Get Today
+## Highlights | 项目亮点
+
+### 中文
+
+- **研究会话而不是一次性问答**
+  每个对象都有独立会话、消息流、任务状态和报告历史。
+
+- **异步任务流**
+  支持创建任务、轮询状态、取消、重试，不会把复杂研究流程塞进一次同步请求。
+
+- **检索增强而不是纯生成**
+  内置 Tavily 与通用 HTTP 检索适配层，支持缓存、聚合、关键词过滤和高亮。
+
+- **结构化报告**
+  报告不只是大段文字，还包含引用、段落级证据、句子级证据和对象画像。
+
+- **对象级研究框架**
+  面向公司、股票、商品三类对象，具备不同的研究路径和结构化画像输出。
+
+- **前后端一体的可演进原型**
+  后端 API、管理端、研究工作台、任务页、报告页都已经具备基础骨架。
+
+### English
+
+- **Session-based research, not one-shot prompting**
+- **Async job lifecycle with status, retry, and cancel**
+- **Retrieval-aware workflow instead of pure generation**
+- **Structured reports with citations and evidence alignment**
+- **Object-aware research flows for company / stock / commodity**
+- **A real product prototype, not just a backend demo**
+
+---
+
+## What Makes It Different | 和常见 AI Demo 的区别
+
+| Typical AI demo | BOID-RAP |
+|---|---|
+| One prompt in, one answer out | Session-based research workflow |
+| Mostly synchronous | Async jobs with lifecycle |
+| Text-heavy output | Structured report + citations + evidence |
+| Weak auditability | History, logs, admin surfaces |
+| Generic UI | Finance-oriented workspace |
+| Prompt playground feel | Research terminal feel |
+
+---
+
+## Current Feature Set | 当前已具备能力
 
 ### Backend
 
@@ -51,16 +102,15 @@ If you care about building AI products for investment research, industry analysi
 - Retrieval caching, aggregation, keyword filtering, highlighting
 - Report generation with citations
 - Paragraph-level follow-up Q&A
-- Keyword-linked search across reports and retrieval results
 - Search insights
 - Audit logs
 
 ### Research Objects
 
-- Company research sessions
-- Stock research sessions
-- Commodity research sessions
-- LLM-generated structured profiles for all three object types
+- Company sessions
+- Stock sessions
+- Commodity sessions
+- LLM-generated structured profiles for all three
 
 ### Frontend
 
@@ -74,40 +124,27 @@ If you care about building AI products for investment research, industry analysi
 - Search insights page
 - Admin pages for users / models / audit logs
 
-The frontend uses a **finance-first design language**:
-
-- deep green as primary
-- amber as accent
-- off-white background
-- left-aligned layouts
-- restrained motion
-- bordered cards without shadows
-
 ---
 
-## Architecture Snapshot
+## Product Shape | 产品形态
 
-At a high level, BOID-RAP is split into four layers:
+BOID-RAP currently behaves like a real research prototype:
 
-1. **Research session layer**
-   Creates and manages sessions for different object types.
+1. Create a research session
+2. Select object type and model
+3. Launch an async job
+4. Inspect retrieval results
+5. Read a structured report
+6. Follow citations and evidence
+7. Ask follow-up questions
+8. Review activity from admin and audit views
 
-2. **Retrieval layer**
-   Pulls and normalizes external information from configured providers.
+This makes it useful as:
 
-3. **Analysis / report layer**
-   Builds structured profiles, reports, citations, and follow-up answers.
-
-4. **Delivery layer**
-   Exposes HTTP APIs and a frontend workspace for actual usage.
-
-Current implementation keeps the backend intentionally lightweight:
-
-- Python standard library HTTP server
-- SQLite
-- no heavy web framework dependency yet
-
-That makes the project easy to inspect, fork, and evolve.
+- an AI research terminal prototype
+- a retrieval + reporting reference implementation
+- a base project for finance / industry analysis products
+- a strong starting point for internal research tooling
 
 ---
 
@@ -128,14 +165,14 @@ That makes the project easy to inspect, fork, and evolve.
 
 ### AI / Retrieval
 
-- OpenAI-compatible Responses API path
+- OpenAI-compatible Responses path
 - OpenRouter-compatible base URL support
 - Tavily retrieval support
 - pluggable HTTP retrieval provider
 
 ---
 
-## Quick Start
+## Quick Start | 快速开始
 
 ### 1. Clone the repo
 
@@ -176,7 +213,7 @@ Frontend default address:
 http://127.0.0.1:5173
 ```
 
-If needed, point the frontend to a different backend:
+If needed:
 
 ```bash
 VITE_API_BASE_URL=http://127.0.0.1:8000 npm run dev
@@ -184,9 +221,7 @@ VITE_API_BASE_URL=http://127.0.0.1:8000 npm run dev
 
 ---
 
-## Default Accounts
-
-You can log in with:
+## Default Accounts | 默认账号
 
 - Admin: `admin / admin123`
 - User: `analyst / analyst123`
@@ -206,7 +241,7 @@ User account is enough to test:
 
 ---
 
-## Environment Variables
+## Environment Variables | 环境变量
 
 The project supports `.env` loading automatically.
 
@@ -228,7 +263,7 @@ BOID_RAP_CORS_ALLOW_ORIGIN=*
 
 ### OpenRouter support
 
-If you want to run the LLM path through OpenRouter, you only need to switch the base URL:
+If you want to run the LLM path through OpenRouter:
 
 ```bash
 BOID_RAP_OPENAI_LLM_ENABLED=true
@@ -239,7 +274,7 @@ BOID_RAP_OPENAI_MODEL=openai/gpt-5-mini
 
 ---
 
-## Main API Surface
+## Main API Surface | 主要接口
 
 ### Auth
 
@@ -290,47 +325,50 @@ BOID_RAP_OPENAI_MODEL=openai/gpt-5-mini
 
 ---
 
-## Current Product Experience
+## Roadmap | 路线图
 
-Right now, BOID-RAP already feels like a real prototype:
+### Near Term
 
-- create a research session
-- choose object type and model
-- run an async research job
-- inspect retrieval output
-- read a structured report
-- navigate citations and evidence
-- ask follow-up questions
+- richer dedicated data sources for company / stock / commodity
+- stronger evidence alignment
+- better report export
+- better frontend polish
+- improved admin workflows
 
-This is already useful if you want to:
+### Mid Term
 
-- prototype an AI research terminal
-- test retrieval + report workflows
-- build a finance / industry analysis product
-- experiment with structured research UX
+- model comparison workflows
+- deeper fact verification
+- production-oriented deployment support
+- stronger observability and monitoring
+
+### Long Term
+
+- a more complete AI-native research operating system
+- extensible providers for finance and industry data
+- stronger collaboration features for teams
 
 ---
 
-## Current Limitations
+## Current Limitations | 当前边界
 
-This repo is promising, but it is still an evolving system.
+This repository is already useful, but it is not pretending to be finished.
 
 Not fully production-ready yet:
 
-- company / stock / commodity dedicated data sources are still incomplete
-- report export is currently Markdown-first
+- dedicated company / stock / commodity data sources are still incomplete
+- export is currently Markdown-first
 - stronger fact verification is still pending
-- more advanced model comparison workflows are still pending
-- frontend polish is improving but not fully finished
-- deployment / CI / monitoring are not yet complete
+- deployment / CI / monitoring are still evolving
+- some frontend areas are still prototype-grade
 
-So the right expectation is:
+The right expectation is:
 
-> this is a serious, working prototype and foundation for a larger product, not a finished SaaS.
+> BOID-RAP is a serious working prototype and a strong foundation, not a finished SaaS product.
 
 ---
 
-## Project Structure
+## Project Structure | 项目结构
 
 ```text
 boid_rap/         backend services, repositories, retrieval, llm, domain logic
@@ -340,49 +378,43 @@ scripts/          migration entrypoints
 app.py            backend entry
 ```
 
-If you want to inspect the frontend specifically, start here:
-
-- `frontend/README.md`
-
 ---
 
-## Who This Is For
+## Contributing | 欢迎贡献
 
-BOID-RAP is especially relevant for:
-
-- AI product builders
-- finance / quant / research tooling teams
-- industry analysis platforms
-- due diligence and knowledge workflow builders
-- developers interested in retrieval + report generation systems
-
-If that sounds like you, this repo is meant to be forked, extended, and improved.
-
----
-
-## Contributing
-
-Issues, ideas, and pull requests are welcome.
+Pull requests, issues, and ideas are welcome.
 
 Good contribution directions:
 
 - stronger structured data providers
 - better retrieval quality
-- better evidence alignment
 - richer report export
-- better admin tools
+- better evidence alignment
+- admin workflow improvements
 - frontend polish
 - deployment support
 
+If you want to contribute, a good way to start is:
+
+1. open an issue describing the problem or idea
+2. keep the change focused
+3. prefer small, reviewable pull requests
+4. include verification steps when possible
+
 ---
 
-## Star This Project
+## Who Should Star This Repo | 谁会愿意 Star 这个项目
 
-If you think this repo is a useful foundation for AI-powered research products:
+If you are building:
 
-- star it
-- watch it
-- fork it
-- share it with others building in this space
+- AI research tools
+- finance / industry analysis software
+- knowledge work systems with retrieval + reporting
+- internal analyst workflows
+- structured AI products beyond plain chat
 
-That kind of support makes it much easier to keep pushing the project forward.
+then this repo is probably worth a star, a fork, or a watch.
+
+If BOID-RAP gives you useful ideas, helps your architecture thinking, or saves you prototype time:
+
+**please consider starring the project.**
