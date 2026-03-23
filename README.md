@@ -1,89 +1,388 @@
 # BOID-RAP
 
-商业对象智能深度调研分析平台的后端原型，当前已经具备可运行的数据库、权限、任务流和检索适配层。
+BOID-RAP is an open-source research workspace for **companies, stocks, and commodities**.
 
-当前版本聚焦于把 `docs/TASK.md` 中最核心的能力抽象成可运行的服务骨架：
+It combines:
 
-- SQLite 数据落库
-- 用户注册、登录与 RBAC
-- 管理端模型配置
-- 用户研究会话
-- 调研任务编排状态
-- 检索 provider 注册与 HTTP 适配
-- LLM provider 适配与报告生成
-- 检索结果缓存、聚合与历史记录
-- 报告生成与历史记录
+- retrieval from external information sources
+- structured research sessions
+- asynchronous research jobs
+- citation-aware report generation
+- follow-up Q&A on top of generated reports
+- a frontend workspace with a restrained, finance-oriented visual style
 
-## 技术选择
+The goal is simple:
 
-为了在空仓库里先落一版零依赖、可直接运行的原型，当前实现使用 Python 标准库和 SQLite 构建 HTTP API。后续可以平滑迁移到 FastAPI、Django 或拆分成微服务。
+> turn messy research inputs into a repeatable workflow that feels closer to a professional research terminal than a generic AI chat page.
 
-## 启动方式
+---
+
+## Why This Project Exists
+
+Most AI research demos stop at “ask a question, get an answer”.
+
+BOID-RAP is trying to push further:
+
+- **session-based research**, not one-off prompts
+- **retrieval + reasoning + structured output**, not pure text generation
+- **object-aware workflows** for company / stock / commodity research
+- **reports with citations and evidence alignment**
+- **job status, history, and auditability**
+- **an actual workspace UI**, not just an API endpoint
+
+If you care about building AI products for investment research, industry analysis, due diligence, or decision support systems, this repo is designed to be a practical starting point.
+
+---
+
+## What You Get Today
+
+### Backend
+
+- User registration / login / RBAC
+- Token expiry / refresh / logout
+- User enable / disable / soft delete
+- SQLite persistence
+- Database migrations
+- Model configuration management
+- Research sessions with multi-turn messages
+- Async research jobs with status tracking / retry / cancel
+- Retrieval provider registry
+- Tavily provider + configurable HTTP retrieval provider
+- Retrieval caching, aggregation, keyword filtering, highlighting
+- Report generation with citations
+- Paragraph-level follow-up Q&A
+- Keyword-linked search across reports and retrieval results
+- Search insights
+- Audit logs
+
+### Research Objects
+
+- Company research sessions
+- Stock research sessions
+- Commodity research sessions
+- LLM-generated structured profiles for all three object types
+
+### Frontend
+
+- Login page
+- Workspace page
+- Session timeline page
+- Job status page
+- Report list page
+- Report detail page
+- Evidence / annotation sidebar
+- Search insights page
+- Admin pages for users / models / audit logs
+
+The frontend uses a **finance-first design language**:
+
+- deep green as primary
+- amber as accent
+- off-white background
+- left-aligned layouts
+- restrained motion
+- bordered cards without shadows
+
+---
+
+## Architecture Snapshot
+
+At a high level, BOID-RAP is split into four layers:
+
+1. **Research session layer**
+   Creates and manages sessions for different object types.
+
+2. **Retrieval layer**
+   Pulls and normalizes external information from configured providers.
+
+3. **Analysis / report layer**
+   Builds structured profiles, reports, citations, and follow-up answers.
+
+4. **Delivery layer**
+   Exposes HTTP APIs and a frontend workspace for actual usage.
+
+Current implementation keeps the backend intentionally lightweight:
+
+- Python standard library HTTP server
+- SQLite
+- no heavy web framework dependency yet
+
+That makes the project easy to inspect, fork, and evolve.
+
+---
+
+## Tech Stack
+
+### Backend
+
+- Python 3
+- SQLite
+- standard-library HTTP server
+
+### Frontend
+
+- React
+- TypeScript
+- Vite
+- React Router
+
+### AI / Retrieval
+
+- OpenAI-compatible Responses API path
+- OpenRouter-compatible base URL support
+- Tavily retrieval support
+- pluggable HTTP retrieval provider
+
+---
+
+## Quick Start
+
+### 1. Clone the repo
+
+```bash
+git clone <your-repo-url>
+cd BOID-RAP
+```
+
+### 2. Start the backend
 
 ```bash
 python3 app.py
 ```
 
-默认监听 `http://127.0.0.1:8000`。
+Backend default address:
 
-首次启动会自动创建 `data/boid_rap.db`。
+```text
+http://127.0.0.1:8000
+```
 
-如需配置真实检索 provider，可参考 [.env.example](/home/meteor/Documents/BOID-RAP/.env.example) 和 [docs/HTTP_RETRIEVAL_PROVIDER.md](/home/meteor/Documents/BOID-RAP/docs/HTTP_RETRIEVAL_PROVIDER.md)。当前已内置 `tavily_search` 和通用 `http_deepsearch` 两种 HTTP provider。
+On first start, the project will automatically:
 
-如需配置真实大模型调用，可在 `.env` 中设置 `BOID_RAP_OPENAI_LLM_ENABLED=true` 并提供 `BOID_RAP_OPENAI_API_KEY`。如果要切到 OpenRouter，只需要把 `BOID_RAP_OPENAI_BASE_URL` 改成 `https://openrouter.ai/api/v1`，并把模型名改成 OpenRouter 的模型标识即可。
+- create `data/boid_rap.db`
+- apply migrations
+- initialize a usable local database
 
-## 默认账号
+### 3. Start the frontend
 
-- 管理员：`admin / admin123`
-- 普通用户：`analyst / analyst123`
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-## 主要接口
+Frontend default address:
+
+```text
+http://127.0.0.1:5173
+```
+
+If needed, point the frontend to a different backend:
+
+```bash
+VITE_API_BASE_URL=http://127.0.0.1:8000 npm run dev
+```
+
+---
+
+## Default Accounts
+
+You can log in with:
+
+- Admin: `admin / admin123`
+- User: `analyst / analyst123`
+
+Admin account is useful for:
+
+- model management
+- user management
+- audit log inspection
+
+User account is enough to test:
+
+- research sessions
+- jobs
+- reports
+- follow-up Q&A
+
+---
+
+## Environment Variables
+
+The project supports `.env` loading automatically.
+
+Common variables:
+
+```bash
+BOID_RAP_OPENAI_LLM_ENABLED=true
+BOID_RAP_OPENAI_API_KEY=your_key
+BOID_RAP_OPENAI_BASE_URL=https://api.openai.com/v1
+BOID_RAP_OPENAI_MODEL=gpt-5-mini
+
+BOID_RAP_TAVILY_ENABLED=true
+BOID_RAP_TAVILY_API_KEY=your_tavily_key
+
+BOID_RAP_HTTP_RETRIEVAL_ENABLED=false
+BOID_RAP_RETRIEVAL_CACHE_TTL_SECONDS=3600
+BOID_RAP_CORS_ALLOW_ORIGIN=*
+```
+
+### OpenRouter support
+
+If you want to run the LLM path through OpenRouter, you only need to switch the base URL:
+
+```bash
+BOID_RAP_OPENAI_LLM_ENABLED=true
+BOID_RAP_OPENAI_API_KEY=your_openrouter_key
+BOID_RAP_OPENAI_BASE_URL=https://openrouter.ai/api/v1
+BOID_RAP_OPENAI_MODEL=openai/gpt-5-mini
+```
+
+---
+
+## Main API Surface
+
+### Auth
+
+- `POST /api/auth/register`
+- `POST /api/auth/login`
+- `POST /api/auth/logout`
+- `POST /api/auth/refresh`
+- `POST /api/auth/change-password`
+
+### Meta
 
 - `GET /health`
 - `GET /api/meta/object-types`
-- `GET /api/meta/search-insights`
-- `POST /api/auth/register`
-- `POST /api/auth/login`
-- `GET /api/admin/users`
-- `GET /api/admin/models`
-- `POST /api/admin/models`
 - `GET /api/meta/retrieval-providers`
+- `GET /api/meta/search-insights`
+
+### Research
+
 - `GET /api/research/sessions`
 - `POST /api/research/sessions`
 - `GET /api/research/sessions/{session_id}`
-- `GET /api/research/sessions/{session_id}/retrievals`
 - `POST /api/research/sessions/{session_id}/messages`
 - `POST /api/research/sessions/{session_id}/run`
+- `GET /api/research/sessions/{session_id}/retrievals`
+
+### Jobs
+
 - `GET /api/research/jobs`
 - `GET /api/research/jobs/{job_id}`
 - `GET /api/research/jobs/{job_id}/retrieval`
+- `POST /api/research/jobs/{job_id}/cancel`
+- `POST /api/research/jobs/{job_id}/retry`
+
+### Reports
+
 - `GET /api/reports`
 - `GET /api/reports/{report_id}`
 - `GET /api/reports/{report_id}/profile`
 - `GET /api/reports/{report_id}/markdown`
 - `POST /api/reports/{report_id}/follow-up`
 
-其中检索结果接口、报告列表、报告详情与 Markdown 导出接口已支持 `keyword` 查询参数，可用于关键词过滤、命中高亮和返回 `search_meta` 推荐词。
-报告追问接口也支持在请求体中传 `keyword`，用于优先锁定命中段落后再继续追问。
+### Admin
 
-## 认证方式
+- `GET /api/admin/users`
+- `GET /api/admin/models`
+- `POST /api/admin/models`
+- `GET /api/admin/audit-logs`
 
-登录后通过 `Authorization: Bearer <token>` 或 `X-Auth-Token: <token>` 访问受保护接口。
+---
 
-## 当前边界
+## Current Product Experience
 
-这一版已经具备持久化、基础权限、异步任务、检索缓存、检索适配和基础报告追问能力，但仍是“可演进原型”，不是完整生产实现：
+Right now, BOID-RAP already feels like a real prototype:
 
-- 真实大模型编排仍未接入
-- 默认报告内容仍以结构化模板输出为主
-- 报告追问已支持段落级定位、句子级证据和引用回链，但还没有做到更强的语义级证据对齐
-- 权限模型仍是简化 RBAC
-- 还没有前端页面、导出能力、监控告警和生产级部署
+- create a research session
+- choose object type and model
+- run an async research job
+- inspect retrieval output
+- read a structured report
+- navigate citations and evidence
+- ask follow-up questions
 
-更完整的架构说明见 [docs/ARCHITECTURE.md](/home/meteor/Documents/BOID-RAP/docs/ARCHITECTURE.md)。
-前端联调可直接参考 [docs/API.md](/home/meteor/Documents/BOID-RAP/docs/API.md)。
-前端页面拆分和对接顺序可参考 [docs/FRONTEND_HANDOFF.md](/home/meteor/Documents/BOID-RAP/docs/FRONTEND_HANDOFF.md)。
-前端技术实现建议可参考 [docs/FRONTEND_TECH_PLAN.md](/home/meteor/Documents/BOID-RAP/docs/FRONTEND_TECH_PLAN.md)。
-前端视觉规范可参考 [docs/FRONTEND_STYLE_GUIDE.md](/home/meteor/Documents/BOID-RAP/docs/FRONTEND_STYLE_GUIDE.md)。
-前端代码骨架位于 [frontend/README.md](/home/meteor/Documents/BOID-RAP/frontend/README.md)。
-前端视觉风格可参考 [docs/FRONTEND_STYLE_GUIDE.md](/home/meteor/Documents/BOID-RAP/docs/FRONTEND_STYLE_GUIDE.md)。
+This is already useful if you want to:
+
+- prototype an AI research terminal
+- test retrieval + report workflows
+- build a finance / industry analysis product
+- experiment with structured research UX
+
+---
+
+## Current Limitations
+
+This repo is promising, but it is still an evolving system.
+
+Not fully production-ready yet:
+
+- company / stock / commodity dedicated data sources are still incomplete
+- report export is currently Markdown-first
+- stronger fact verification is still pending
+- more advanced model comparison workflows are still pending
+- frontend polish is improving but not fully finished
+- deployment / CI / monitoring are not yet complete
+
+So the right expectation is:
+
+> this is a serious, working prototype and foundation for a larger product, not a finished SaaS.
+
+---
+
+## Project Structure
+
+```text
+boid_rap/         backend services, repositories, retrieval, llm, domain logic
+frontend/         React frontend workspace
+data/             local SQLite database
+scripts/          migration entrypoints
+app.py            backend entry
+```
+
+If you want to inspect the frontend specifically, start here:
+
+- `frontend/README.md`
+
+---
+
+## Who This Is For
+
+BOID-RAP is especially relevant for:
+
+- AI product builders
+- finance / quant / research tooling teams
+- industry analysis platforms
+- due diligence and knowledge workflow builders
+- developers interested in retrieval + report generation systems
+
+If that sounds like you, this repo is meant to be forked, extended, and improved.
+
+---
+
+## Contributing
+
+Issues, ideas, and pull requests are welcome.
+
+Good contribution directions:
+
+- stronger structured data providers
+- better retrieval quality
+- better evidence alignment
+- richer report export
+- better admin tools
+- frontend polish
+- deployment support
+
+---
+
+## Star This Project
+
+If you think this repo is a useful foundation for AI-powered research products:
+
+- star it
+- watch it
+- fork it
+- share it with others building in this space
+
+That kind of support makes it much easier to keep pushing the project forward.
